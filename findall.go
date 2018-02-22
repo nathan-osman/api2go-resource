@@ -9,10 +9,14 @@ import (
 
 // FindAll attempts to retrieve all instances of a model from the database.
 func (r *Resource) FindAll(req api2go.Request) (api2go.Responder, error) {
+	if err := r.runGlobalHooks(FindAll, req); err != nil {
+		return nil, err
+	}
 	c, err := r.apply(req)
 	if err != nil {
 		return nil, err
 	}
+	c = r.runGetHooks(c, req)
 	var (
 		objType   = reflect.TypeOf(r.Type)
 		sliceType = reflect.SliceOf(objType)
