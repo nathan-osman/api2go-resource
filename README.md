@@ -5,6 +5,14 @@
 
 This package serves as a bridge between [GORM](https://github.com/jinzhu/gorm) and [api2go](https://github.com/manyminds/api2go), reducing the amount of boilerplate code needed for implementing CRUD actions for GORM models.
 
+### Features
+
+Here are some of the features that api2go-resource provides:
+
+- Works with your existing GORM models
+- Enables filtering to be limited to specific fields
+- Provides hooks to enable access control and normalization
+
 ### Usage
 
 Let's suppose you have the following model definition:
