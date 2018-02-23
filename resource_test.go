@@ -1,6 +1,9 @@
 package resource
 
 import (
+	"fmt"
+	"io"
+	"net/http/httptest"
 	"strconv"
 
 	"github.com/jinzhu/gorm"
@@ -28,25 +31,37 @@ func (a *Article) SetID(id string) error {
 	return nil
 }
 
-var (
-	Article1 = &Article{
-		Title:   "Title 1",
-		Content: "Content 1",
-	}
-	Article2 = &Article{
-		Title:   "Title 2",
-		Content: "Content 2",
-	}
-)
-
 func initDatabase() (*gorm.DB, *api2go.API, error) {
 	c, err := gorm.Open("sqlite3", "file::memory:?cache=shared")
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := c.AutoMigrate(Article1).Error; err != nil {
+	if err := c.AutoMigrate(&Article{}).Error; err != nil {
 		c.Close()
 		return nil, nil, err
 	}
 	return c, api2go.NewAPI(""), nil
+}
+
+func createArticle(c *gorm.DB) (*Article, error) {
+	a := &Article{
+		Title:   "Title",
+		Content: "Content",
+	}
+	if err := c.Create(a).Error; err != nil {
+		return nil, err
+	}
+	return a, nil
+}
+
+func testRequest(a *api2go.API, method, target string, body io.Reader, code int) error {
+	var (
+		w = httptest.NewRecorder()
+		r = httptest.NewRequest(method, target, body)
+	)
+	a.Handler().ServeHTTP(w, r)
+	if w.Code != code {
+		return fmt.Errorf("%d != %d", w.Code, code)
+	}
+	return nil
 }
