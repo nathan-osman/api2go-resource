@@ -20,7 +20,7 @@ func TestDelete(t *testing.T) {
 		DB:   c,
 		Type: &Article{},
 	})
-	if err := testRequest(
+	if _, err := testRequest(
 		a,
 		http.MethodDelete,
 		fmt.Sprintf("/articles/%d", article.ID),

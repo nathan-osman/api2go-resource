@@ -1,13 +1,17 @@
 package resource
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"strconv"
 
 	"github.com/jinzhu/gorm"
 	"github.com/manyminds/api2go"
+	"github.com/manyminds/api2go/jsonapi"
 
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -54,14 +58,14 @@ func createArticle(c *gorm.DB) (*Article, error) {
 	return a, nil
 }
 
-func testRequest(a *api2go.API, method, target string, body io.Reader, code int) error {
+func testRequest(a *api2go.API, method, target string, body io.Reader, code int) (*http.Response, error) {
 	var (
 		w = httptest.NewRecorder()
 		r = httptest.NewRequest(method, target, body)
 	)
 	a.Handler().ServeHTTP(w, r)
 	if w.Code != code {
-		return fmt.Errorf("%d != %d", w.Code, code)
+		return nil, fmt.Errorf("%d != %d", w.Code, code)
 	}
-	return nil
+	return w.Result(), nil
 }
