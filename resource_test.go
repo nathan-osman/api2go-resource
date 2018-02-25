@@ -69,3 +69,15 @@ func testRequest(a *api2go.API, method, target string, body io.Reader, code int)
 	}
 	return w.Result(), nil
 }
+
+func unmarshalResponse(r *http.Response) (*jsonapi.Document, error) {
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, err
+	}
+	doc := &jsonapi.Document{}
+	if err := json.Unmarshal(b, doc); err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
