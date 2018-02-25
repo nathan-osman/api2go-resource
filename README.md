@@ -1,5 +1,6 @@
 ## api2go-resource
 
+[![Build Status](https://travis-ci.org/nathan-osman/api2go-resource.svg?branch=master)](https://travis-ci.org/nathan-osman/api2go-resource)
 [![GoDoc](https://godoc.org/github.com/nathan-osman/api2go-resource?status.svg)](https://godoc.org/github.com/nathan-osman/api2go-resource)
 [![MIT License](http://img.shields.io/badge/license-MIT-9370d8.svg?style=flat)](http://opensource.org/licenses/MIT)
 
