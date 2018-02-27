@@ -81,24 +81,3 @@ func unmarshalResponse(r *http.Response) (*jsonapi.Document, error) {
 	}
 	return doc, nil
 }
-
-func verifyCount(a *api2go.API, count int) error {
-	r, err := sendRequest(
-		a,
-		http.MethodGet,
-		"/articles",
-		nil,
-		http.StatusOK,
-	)
-	if err != nil {
-		return err
-	}
-	d, err := unmarshalResponse(r)
-	if err != nil {
-		return err
-	}
-	if len(d.Data.DataArray) != 2 {
-		return fmt.Errorf("%d != %d", len(d.Data.DataArray), 2)
-	}
-	return nil
-}

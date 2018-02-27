@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"net/http"
 	"testing"
 )
 
@@ -20,7 +21,21 @@ func TestFindAll(t *testing.T) {
 		DB:   c,
 		Type: &Article{},
 	})
-	if err := verifyCount(a, 2); err != nil {
+	r, err := sendRequest(
+		a,
+		http.MethodGet,
+		"/articles",
+		nil,
+		http.StatusOK,
+	)
+	if err != nil {
 		t.Fatal(err)
+	}
+	d, err := unmarshalResponse(r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(d.Data.DataArray) != 2 {
+		t.Fatalf("%d != %d", len(d.Data.DataArray), 2)
 	}
 }
