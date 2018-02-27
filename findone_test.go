@@ -20,7 +20,7 @@ func TestFindOne(t *testing.T) {
 		DB:   c,
 		Type: &Article{},
 	})
-	r, err := testRequest(
+	r, err := sendRequest(
 		a,
 		http.MethodGet,
 		fmt.Sprintf("/articles/%d", article.ID),

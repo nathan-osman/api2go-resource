@@ -27,7 +27,7 @@ func TestUpdate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := testRequest(
+	if _, err := sendRequest(
 		a,
 		http.MethodPatch,
 		fmt.Sprintf("/articles/%d", article.ID),

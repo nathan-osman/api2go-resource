@@ -22,7 +22,7 @@ func TestCreate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := testRequest(
+	if _, err := sendRequest(
 		a,
 		http.MethodPost,
 		"/articles",

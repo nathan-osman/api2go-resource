@@ -58,7 +58,7 @@ func createArticle(c *gorm.DB) (*Article, error) {
 	return a, nil
 }
 
-func testRequest(a *api2go.API, method, target string, body io.Reader, code int) (*http.Response, error) {
+func sendRequest(a *api2go.API, method, target string, body io.Reader, code int) (*http.Response, error) {
 	var (
 		w = httptest.NewRecorder()
 		r = httptest.NewRequest(method, target, body)
@@ -83,7 +83,7 @@ func unmarshalResponse(r *http.Response) (*jsonapi.Document, error) {
 }
 
 func verifyCount(a *api2go.API, count int) error {
-	r, err := testRequest(
+	r, err := sendRequest(
 		a,
 		http.MethodGet,
 		"/articles",
