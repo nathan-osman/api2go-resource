@@ -1,12 +1,14 @@
 package resource
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
 	"testing"
 
 	"github.com/jinzhu/gorm"
 	"github.com/manyminds/api2go"
+	"github.com/manyminds/api2go/jsonapi"
 )
 
 func TestHooks(t *testing.T) {
@@ -45,14 +47,27 @@ func TestHooks(t *testing.T) {
 			},
 		},
 	})
+	b, err := jsonapi.Marshal(article)
+	if err != nil {
+		t.Fatal(err)
+	}
 	_, err = sendRequest(
 		a,
-		http.MethodGet,
+		http.MethodPatch,
 		fmt.Sprintf("/articles/%d", article.ID),
-		nil,
+		bytes.NewReader(b),
 		http.StatusOK,
 	)
 	if err != nil {
 		t.Fatal(err)
+	}
+	if !globalHookInvoked {
+		t.Fatal("global hook was not invoked")
+	}
+	if !getHookInvoked {
+		t.Fatal("get hook was not invoked")
+	}
+	if !setHookInvoked {
+		t.Fatal("set hook was not invoked")
 	}
 }
