@@ -5,13 +5,19 @@ import (
 	"github.com/manyminds/api2go"
 )
 
+// Action indicates the type of action being performed to a callback.
 type Action int
 
 const (
+	// Create indicates that a resource is being created.
 	Create Action = iota
+	// Delete indicates that a resource is being destroyed.
 	Delete
+	// FindAll attempts to filter a set of resources.
 	FindAll
+	// FindOne attempts to find a single resource by its primary key.
 	FindOne
+	// Update indicates that a resource is being updated.
 	Update
 )
 

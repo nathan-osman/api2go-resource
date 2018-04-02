@@ -8,6 +8,8 @@ import (
 	"github.com/manyminds/api2go"
 )
 
+// ErrInvalidParameter indicates that an invalid parameter was supplied to a
+// request.
 var ErrInvalidParameter = errors.New("invalid parameter")
 
 // apply takes the query parameters from a request and applies them to an SQL
