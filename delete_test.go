@@ -29,4 +29,13 @@ func TestDelete(t *testing.T) {
 	); err != nil {
 		t.Fatal(err)
 	}
+	if _, err := sendRequest(
+		a,
+		http.MethodDelete,
+		fmt.Sprintf("/articles/%d", article.ID),
+		nil,
+		http.StatusNotFound,
+	); err != nil {
+		t.Fatal(err)
+	}
 }

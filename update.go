@@ -17,7 +17,7 @@ func (r *Resource) Update(obj interface{}, req api2go.Request) (api2go.Responder
 	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
-	if err := p.DB.Model(r.Type).Updates(p.Obj).Error; err != nil {
+	if err := translateError(p.DB.Model(r.Type).Updates(p.Obj)); err != nil {
 		return nil, err
 	}
 	return &api2go.Response{

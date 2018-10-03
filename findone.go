@@ -24,15 +24,8 @@ func (r *Resource) FindOne(ID string, req api2go.Request) (api2go.Responder, err
 		objType = reflect.TypeOf(r.Type).Elem()
 		objVal  = reflect.New(objType)
 	)
-	if db := p.DB.First(objVal.Interface(), ID); db.Error != nil {
-		if db.RecordNotFound() {
-			return nil, api2go.NewHTTPError(
-				nil,
-				http.StatusText(http.StatusNotFound),
-				http.StatusNotFound,
-			)
-		}
-		return nil, db.Error
+	if err := translateError(p.DB.First(objVal.Interface(), ID)); err != nil {
+		return nil, err
 	}
 	return &api2go.Response{
 		Res:  objVal.Interface(),

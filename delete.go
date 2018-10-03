@@ -16,7 +16,7 @@ func (r *Resource) Delete(id string, req api2go.Request) (api2go.Responder, erro
 	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
-	if err := p.DB.Where("ID = ?", id).Delete(r.Type).Error; err != nil {
+	if err := translateError(p.DB.Where("ID = ?", id).Delete(r.Type)); err != nil {
 		return nil, err
 	}
 	return &api2go.Response{
