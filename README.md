@@ -70,42 +70,50 @@ Hooks can be used for a number of different purposes.
 For example, to make a resource read-only:
 
 ```go
-func readOnly(action resource.Action, api2go.Request) error {
-    switch action {
-    case Create, Delete, Update:
-        return errors.New("invalid action")
+func readOnly(p *resource.Params) error {
+    switch p.Action {
+    case resource.Create, resource.Delete, resource.Update:
+        return api2go.NewHTTPError(nil, "read only", http.StatusBadRequest)
     }
     return nil
 }
 
 var articleResource = &resource.Resource{
     // ...
-    GlobalHooks: []GlobalHook{readOnly},
+    Hooks: []Hook{readOnly},
 }
 ```
 
 To ensure that articles are always retrieved in alphabetical order:
 
 ```go
-func alphabeticalOrder(c *gorm.DB, api2go.Request) *gorm.DB {
-    return c.Order('title')
+func alphabeticalOrder(p *resource.Params) error {
+    switch p.Action {
+    case resource.FindAll, resource.FindOne:
+        p.DB = p.DB.Order('title')
+    }
+    return nil
 }
 
 var articleResource = &resource.Resource{
     // ...
-    GetHooks: []GetHook{alphabeticalOrder},
+    Hooks: []Hook{alphabeticalOrder},
 }
 ```
 
 To remove any extra whitespace in an article title before saving:
 
 ```go
-func trimTitle(obj interface{}, api2go.Request) {
-    obj.Title = strings.TrimSpace(obj.Title)
+func trimTitle(p *resource.Params) error {
+    switch p.Action {
+    case resource.Create, resource.Update:
+        p.Obj.Title = strings.TrimSpace(p.Obj.Title)
+    }
+    return nil
 }
 
 var articleResource = &resource.Resource{
     // ...
-    SetHooks: []SetHook{trimTitle},
+    Hooks: []Hook{trimTitle},
 }
 ```
