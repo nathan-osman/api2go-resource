@@ -34,9 +34,9 @@ type Params struct {
 // the hook returns an error, the action does not run.
 type Hook func(*Params) error
 
-// runHooks executes all hooks for a resource. If either return value is
-// non-nil, processing should stop. The parameter values may be modified to
-// affect the operation.
+// runHooks executes all hooks for a resource. If the return value is non-nil,
+// processing should stop. The parameter values may be modified to affect the
+// operation.
 func (r *Resource) runHooks(params *Params) error {
 	for _, h := range r.Hooks {
 		if err := h(params); err != nil {
