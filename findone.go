@@ -14,10 +14,10 @@ func (r *Resource) FindOne(ID string, req api2go.Request) (api2go.Responder, err
 		Request: req,
 		DB:      r.DB,
 	}
-	if err := r.runHooks(p); err != nil {
+	if err := r.apply(p); err != nil {
 		return nil, err
 	}
-	if err := r.apply(p); err != nil {
+	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
 	var (

@@ -14,10 +14,10 @@ func (r *Resource) FindAll(req api2go.Request) (api2go.Responder, error) {
 		Request: req,
 		DB:      r.DB,
 	}
-	if err := r.runHooks(p); err != nil {
+	if err := r.apply(p); err != nil {
 		return nil, err
 	}
-	if err := r.apply(p); err != nil {
+	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
 	var (
