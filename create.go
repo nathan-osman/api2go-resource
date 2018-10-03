@@ -8,15 +8,20 @@ import (
 
 // Create attempts to save a new model instance to the database.
 func (r *Resource) Create(obj interface{}, req api2go.Request) (api2go.Responder, error) {
-	if err := r.runGlobalHooks(Create, req); err != nil {
+	p := &Params{
+		Action:  Create,
+		Request: req,
+		DB:      r.DB,
+		Obj:     obj,
+	}
+	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
-	r.runSetHooks(obj, req)
-	if err := r.DB.Create(obj).Error; err != nil {
+	if err := p.DB.Create(p.Obj).Error; err != nil {
 		return nil, err
 	}
 	return &api2go.Response{
-		Res:  obj,
+		Res:  p.Obj,
 		Code: http.StatusCreated,
 	}, nil
 }

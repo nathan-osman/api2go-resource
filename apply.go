@@ -3,9 +3,6 @@ package resource
 import (
 	"errors"
 	"fmt"
-
-	"github.com/jinzhu/gorm"
-	"github.com/manyminds/api2go"
 )
 
 // ErrInvalidParameter indicates that an invalid parameter was supplied to a
@@ -14,17 +11,16 @@ var ErrInvalidParameter = errors.New("invalid parameter")
 
 // apply takes the query parameters from a request and applies them to an SQL
 // query.
-func (r *Resource) apply(req api2go.Request) (*gorm.DB, error) {
-	c := r.DB
+func (r *Resource) apply(p *Params) error {
 loop:
-	for k, v := range req.QueryParams {
+	for k, v := range p.Request.QueryParams {
 		for _, f := range r.Fields {
 			if f == k {
-				c = c.Where(fmt.Sprintf("%s = ?", k), v[0])
+				p.DB = p.DB.Where(fmt.Sprintf("%s = ?", k), v[0])
 				continue loop
 			}
 		}
-		return nil, ErrInvalidParameter
+		return ErrInvalidParameter
 	}
-	return c, nil
+	return nil
 }
