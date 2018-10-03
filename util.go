@@ -32,15 +32,12 @@ loop:
 // translateError takes a database query and ensures an appropriate HTTPError
 // is returned when the query fails.
 func translateError(db *gorm.DB) error {
-	if db.Error != nil {
-		if db.RecordNotFound() {
-			return api2go.NewHTTPError(
-				nil,
-				http.StatusText(http.StatusNotFound),
-				http.StatusNotFound,
-			)
-		}
-		return db.Error
+	if db.RecordNotFound() || db.RowsAffected == 0 {
+		return api2go.NewHTTPError(
+			nil,
+			http.StatusText(http.StatusNotFound),
+			http.StatusNotFound,
+		)
 	}
-	return nil
+	return db.Error
 }
