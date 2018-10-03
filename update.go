@@ -9,7 +9,7 @@ import (
 // Update attempts to update a model instance in the database.
 func (r *Resource) Update(obj interface{}, req api2go.Request) (api2go.Responder, error) {
 	p := &Params{
-		Action:  FindAll,
+		Action:  Update,
 		Request: req,
 		DB:      r.DB,
 		Obj:     obj,
