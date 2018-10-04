@@ -9,7 +9,7 @@ import (
 // Update attempts to update a model instance in the database.
 func (r *Resource) Update(obj interface{}, req api2go.Request) (api2go.Responder, error) {
 	p := &Params{
-		Action:  Update,
+		Action:  BeforeUpdate,
 		Request: req,
 		DB:      r.DB,
 		Obj:     obj,
@@ -17,7 +17,11 @@ func (r *Resource) Update(obj interface{}, req api2go.Request) (api2go.Responder
 	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
-	if err := translateError(p.DB.Model(r.Type).Updates(p.Obj)); err != nil {
+	if p.DB = p.DB.Model(r.Type).Updates(p.Obj); p.DB.Error != nil {
+		return nil, p.DB.Error
+	}
+	p.Action = AfterUpdate
+	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
 	return &api2go.Response{

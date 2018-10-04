@@ -72,7 +72,7 @@ For example, to make a resource read-only:
 ```go
 func readOnly(p *resource.Params) error {
     switch p.Action {
-    case resource.Create, resource.Delete, resource.Update:
+    case resource.BeforeCreate, resource.BeforeDelete, resource.BeforeUpdate:
         return api2go.NewHTTPError(nil, "read only", http.StatusBadRequest)
     }
     return nil
@@ -89,7 +89,7 @@ To ensure that articles are always retrieved in alphabetical order:
 ```go
 func alphabeticalOrder(p *resource.Params) error {
     switch p.Action {
-    case resource.FindAll, resource.FindOne:
+    case resource.BeforeFindAll, resource.BeforeFindOne:
         p.DB = p.DB.Order('title')
     }
     return nil
@@ -106,7 +106,7 @@ To remove any extra whitespace in an article title before saving:
 ```go
 func trimTitle(p *resource.Params) error {
     switch p.Action {
-    case resource.Create, resource.Update:
+    case resource.BeforeCreate, resource.BeforeUpdate:
         p.Obj.Title = strings.TrimSpace(p.Obj.Title)
     }
     return nil

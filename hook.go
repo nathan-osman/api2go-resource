@@ -9,16 +9,30 @@ import (
 type Action int
 
 const (
-	// Create indicates that a resource is being created.
-	Create Action = iota
-	// Delete indicates that a resource is being destroyed.
-	Delete
-	// FindAll attempts to filter a set of resources.
-	FindAll
-	// FindOne attempts to find a single resource by its primary key.
-	FindOne
-	// Update indicates that a resource is being updated.
-	Update
+	// BeforeCreate indicates that a resource is about to be created.
+	BeforeCreate Action = iota
+	// AfterCreate indicates that a resource has been created.
+	AfterCreate
+
+	// BeforeDelete indicates that a resource is about to be destroyed.
+	BeforeDelete
+	// AfterDelete indicates that a resource has been destroyed.
+	AfterDelete
+
+	// BeforeUpdate indicates that a resource is about to be modified.
+	BeforeUpdate
+	// AfterUpdate indicates that a resource has been modified.
+	AfterUpdate
+
+	// BeforeFindAll indicates that multiple resources are about to be retrieved.
+	BeforeFindAll
+	// AfterFindAll indicates that multiple resources may have been retrieved.
+	AfterFindAll
+
+	// BeforeFindOne indicates that a single resource is about to be retrieved.
+	BeforeFindOne
+	// AfterFindOne indicates that a single resource may have been retrieved.
+	AfterFindOne
 )
 
 // Params contains information about an API request. Only certain members will

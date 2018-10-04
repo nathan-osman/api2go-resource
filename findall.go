@@ -10,7 +10,7 @@ import (
 // FindAll attempts to retrieve all instances of a model from the database.
 func (r *Resource) FindAll(req api2go.Request) (api2go.Responder, error) {
 	p := &Params{
-		Action:  FindAll,
+		Action:  BeforeFindAll,
 		Request: req,
 		DB:      r.DB,
 	}
@@ -25,7 +25,11 @@ func (r *Resource) FindAll(req api2go.Request) (api2go.Responder, error) {
 		sliceType = reflect.SliceOf(objType)
 		sliceVal  = reflect.New(sliceType)
 	)
-	if err := p.DB.Find(sliceVal.Interface()).Error; err != nil {
+	if p.DB = p.DB.Find(sliceVal.Interface()); p.DB.Error != nil {
+		return nil, p.DB.Error
+	}
+	p.Action = AfterFindAll
+	if err := r.runHooks(p); err != nil {
 		return nil, err
 	}
 	return &api2go.Response{

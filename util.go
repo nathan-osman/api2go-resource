@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jinzhu/gorm"
 	"github.com/manyminds/api2go"
 )
 
@@ -26,17 +25,4 @@ loop:
 		)
 	}
 	return nil
-}
-
-// translateError takes a database query and ensures an appropriate HTTPError
-// is returned when the query fails.
-func translateError(db *gorm.DB) error {
-	if db.RecordNotFound() || db.RowsAffected == 0 {
-		return api2go.NewHTTPError(
-			nil,
-			http.StatusText(http.StatusNotFound),
-			http.StatusNotFound,
-		)
-	}
-	return db.Error
 }
